@@ -3,10 +3,13 @@ import { useAuth } from "../providers/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
 import HomePage from "../pages/HomePage";
-import Logout from "../pages/Logout";
+import Register from "../pages/Register";
+import Posts from "../pages/Posts";
+import CreatePost from "../pages/CreatePost";
+import UpdatePost from "../pages/UpdatePost";
 
 const Routes = () => {
-  const { token } = useAuth();
+  const { user } = useAuth();
   // Route configurations go here
 
   const routesForAuthenticatedOnly = [
@@ -20,11 +23,15 @@ const Routes = () => {
         },
         {
           path: "/posts",
-          element: <div>All Posts</div>,
+          element: <Posts />,
         },
         {
-          path: "/logout",
-          element: <Logout />,
+          path: "/posts/create",
+          element: <CreatePost />,
+        },
+        {
+          path: "/posts/update/:id",
+          element: <UpdatePost />,
         },
       ],
     },
@@ -39,10 +46,14 @@ const Routes = () => {
       path: "/login",
       element: <Login />,
     },
+    {
+      path: "/register",
+      element: <Register />,
+    },
   ];
 
   const router = createBrowserRouter([
-    ...(!token ? routesForNotAuthenticatedOnly : []),
+    ...(!user ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
   ]);
 

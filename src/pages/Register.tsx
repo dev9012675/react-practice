@@ -4,15 +4,14 @@ import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import axios from "axios";
-import { useNavigate } from "react-router";
-import { useAuth } from "../providers/authProvider";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 export default function Login() {
-  const [data, setData] = React.useState({ email: "", password: "" });
+  const [user, setUser] = React.useState({ email: "", password: "" });
   const [open, setOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -25,32 +24,25 @@ export default function Login() {
     setOpen(false);
   };
 
-  const { setUser } = useAuth();
-  const navigate = useNavigate();
-
   function handleChange(event) {
-    setData((prevData) => {
-      return { ...prevData, [event.target.name]: event.target.value };
+    setUser((prevUser) => {
+      return { ...prevUser, [event.target.name]: event.target.value };
     });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const form = new FormData();
-    form.append("username", data.email);
-    form.append("password", data.password);
-
-    console.log(data);
+    console.log(user);
     await axios
-      .post("http://localhost:8000/api/login", form)
+      .post("http://localhost:8000/api/users", { ...user })
       .then((res) => {
-        console.log(res.data);
-        setUser(res.data);
-        navigate("/", { replace: true });
+        setAlertMessage("Registered successfully");
+        setUser({ email: "", password: "" });
+        setOpen(true);
       })
       .catch((e) => {
-        console.log(`Error:${e}`);
+        setAlertMessage(`Failed to register:${e.message}`);
         setOpen(true);
       });
   }
@@ -58,7 +50,7 @@ export default function Login() {
     <Box>
       <Container>
         <Typography component="h1" variant="h4" marginY={3}>
-          Login
+          Register
         </Typography>
         <form action="POST" onSubmit={handleSubmit}>
           <TextField
@@ -67,7 +59,7 @@ export default function Login() {
             label="Email"
             type="email"
             variant="standard"
-            value={data.email}
+            value={user.email}
             onChange={handleChange}
             fullWidth
           />
@@ -77,7 +69,7 @@ export default function Login() {
             label="Password"
             type="password"
             variant="standard"
-            value={data.password}
+            value={user.password}
             onChange={handleChange}
             fullWidth
           />
@@ -93,11 +85,11 @@ export default function Login() {
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert
             onClose={handleClose}
-            severity="error"
+            severity={alertMessage.startsWith("Failed") ? "error" : "success"}
             variant="filled"
             sx={{ width: "100%" }}
           >
-            Login Failed
+            {alertMessage}
           </Alert>
         </Snackbar>
       </Container>

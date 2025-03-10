@@ -3,18 +3,39 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useAuth } from "../providers/authProvider";
 
 export default function NavBar() {
+  const { user, setUser } = useAuth();
+
   const navItems = [
     {
       link: "Home",
       url: "/",
     },
-    {
-      link: "Login",
-      url: "/login",
-    },
   ];
+
+  function handleLogout() {
+    setUser();
+  }
+
+  if (user) {
+    navItems.push({
+      link: "View Posts",
+      url: "/posts",
+    });
+  } else {
+    navItems.push(
+      {
+        link: "Login",
+        url: "/login",
+      },
+      {
+        link: "Register",
+        url: "/register",
+      }
+    );
+  }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -28,6 +49,11 @@ export default function NavBar() {
                 {item.link}
               </Button>
             ))}
+            {user && (
+              <Button sx={{ color: "#fff" }} onClick={handleLogout}>
+                Logout
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
