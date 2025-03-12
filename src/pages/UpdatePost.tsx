@@ -12,11 +12,7 @@ import { useParams } from "react-router";
 
 export default function UpdatePost() {
   const params = useParams();
-  const [post, setPost] = React.useState({
-    title: "",
-    content: "",
-    published: true,
-  });
+  const [post, setPost] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
 
@@ -72,6 +68,18 @@ export default function UpdatePost() {
         setAlertMessage(`Failed to update post:${e.message}`);
         setOpen(true);
       });
+  }
+
+  if (!post) {
+    return (
+      <Box>
+        <Container>
+          <Typography component="h1" variant="h4" marginY={3}>
+            Loading ...
+          </Typography>
+        </Container>
+      </Box>
+    );
   }
   return (
     <Box>

@@ -8,22 +8,23 @@ import { useAuth } from "../providers/authProvider";
 export default function NavBar() {
   const { user, setUser } = useAuth();
 
-  const navItems = [
-    {
-      link: "Home",
-      url: "/",
-    },
-  ];
+  const navItems = [];
 
   function handleLogout() {
     setUser();
   }
 
   if (user) {
-    navItems.push({
-      link: "View Posts",
-      url: "/posts",
-    });
+    navItems.push(
+      {
+        link: "Home",
+        url: "/",
+      },
+      {
+        link: "View Posts",
+        url: "/posts",
+      }
+    );
   } else {
     navItems.push(
       {
@@ -50,9 +51,18 @@ export default function NavBar() {
               </Button>
             ))}
             {user && (
-              <Button sx={{ color: "#fff" }} onClick={handleLogout}>
-                Logout
-              </Button>
+              <>
+                <Button sx={{ color: "#fff" }} onClick={handleLogout}>
+                  Logout
+                </Button>
+                <Typography
+                  variant="body2"
+                  component="span"
+                  sx={{ flexGrow: 1 }}
+                >
+                  {user.email}
+                </Typography>
+              </>
             )}
           </Box>
         </Toolbar>
