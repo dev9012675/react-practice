@@ -8,8 +8,10 @@ import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
+import MediaRecorder from "../components/MediaRecorder";
+import AudioMenu from "../components/AudioMenu";
 
-export default function Login() {
+export default function CreatePost() {
   const [post, setPost] = React.useState({
     title: "",
     content: "",
@@ -17,6 +19,9 @@ export default function Login() {
   });
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [audioAttribute, setAudioAttribute] = React.useState(
+    Object.keys(post)[0]
+  );
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -55,12 +60,27 @@ export default function Login() {
         setOpen(true);
       });
   }
+
+  console.log(audioAttribute);
   return (
     <Box>
       <Container>
-        <Typography component="h1" variant="h4" marginY={3}>
-          Create Post
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography component="h1" variant="h4" marginY={3}>
+            Create Post
+          </Typography>
+          <AudioMenu
+            elements={["title", "content"]}
+            title="Audio"
+            setAttribute={setAudioAttribute}
+          />
+        </Box>
         <form action="POST" onSubmit={handleSubmit}>
           <TextField
             id="title"
@@ -107,6 +127,12 @@ export default function Login() {
             </Button>
           </Box>
         </form>
+        <MediaRecorder
+          attribute={audioAttribute}
+          setAttribute={setPost}
+          setAlertMessage={setAlertMessage}
+          setOpen={setOpen}
+        />
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert
             onClose={handleClose}
