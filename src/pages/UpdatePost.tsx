@@ -15,19 +15,18 @@ export default function UpdatePost() {
   const [post, setPost] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   React.useEffect(() => {
     const fetchPost = async () => {
-      await axios
-        .get(`http://localhost:8000/api/posts/${params.id}`)
-        .then((res) => {
-          console.log(`Data:${res.data}`);
-          setPost({
-            title: res.data.title,
-            content: res.data.content,
-            published: res.data.published,
-          });
+      await axios.get(`${appUrl}/api/posts/${params.id}`).then((res) => {
+        console.log(`Data:${res.data}`);
+        setPost({
+          title: res.data.title,
+          content: res.data.content,
+          published: res.data.published,
         });
+      });
     };
 
     fetchPost();
@@ -59,7 +58,7 @@ export default function UpdatePost() {
 
     console.log(post);
     await axios
-      .put(`http://localhost:8000/api/posts/${params.id}`, { ...post })
+      .put(`${appUrl}/api/posts/${params.id}`, { ...post })
       .then(() => {
         setAlertMessage("Post updated successfully");
         setOpen(true);

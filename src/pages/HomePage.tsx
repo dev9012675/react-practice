@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import { Container } from "@mui/material";
-import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 
 export default function HomePage() {

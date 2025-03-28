@@ -8,10 +8,21 @@ import axios from "axios";
 export default function MediaRecorder(props) {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   const handleSave = async () => {
     const audioBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
-    const audioFile = new File([audioBlob], "voice.wav", { type: "audio/wav" });
+    const audioFile = new File([audioBlob], `${props.attribute}.wav`, {
+      type: "audio/wav",
+    });
+    props.setAttribute((prevAttributes) => ({
+      ...prevAttributes,
+      audioFiles: {
+        ...prevAttributes.audioFiles,
+        [props.attribute]: audioFile,
+      },
+    }));
+
     console.log(audioFile);
     console.log(audioBlob);
     const formData = new FormData(); // preparing to send to the server
@@ -24,7 +35,7 @@ export default function MediaRecorder(props) {
 
   const onSaveAudio = async (data: FormData) => {
     await axios
-      .post("http://localhost:8000/api/audio/transcribe", data)
+      .post(`${appUrl}/api/audio/transcribe`, data)
       .then((res) => {
         console.log(res.data);
         props.setAttribute((prevAttributes) => ({

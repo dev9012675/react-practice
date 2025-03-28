@@ -7,6 +7,7 @@ import Register from "../pages/Register";
 import Posts from "../pages/Posts";
 import CreatePost from "../pages/CreatePost";
 import UpdatePost from "../pages/UpdatePost";
+import ViewAudio from "../pages/ViewAudio";
 
 const Routes = () => {
   const { user } = useAuth();
@@ -32,6 +33,10 @@ const Routes = () => {
         {
           path: "/posts/update/:id",
           element: <UpdatePost />,
+        },
+        {
+          path: "/posts/:id/audio",
+          element: <ViewAudio />,
         },
       ],
     },

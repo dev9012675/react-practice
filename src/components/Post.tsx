@@ -4,8 +4,10 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import { IPost } from "../interfaces";
 import { useAuth } from "../providers/authProvider";
+import { Link as RouterLink } from "react-router";
 import axios from "axios";
 
 const bull = (
@@ -19,11 +21,11 @@ const bull = (
 
 export default function Post(props: IPost) {
   const { user } = useAuth();
-  console.log(props);
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   const handleDelete = async () => {
     await axios
-      .delete(`http://localhost:8000/api/posts/${props.id}`)
+      .delete(`${appUrl}/api/posts/${props.id}`)
       .then(() =>
         props.setPosts((prevPosts) =>
           prevPosts.filter((post) => post.id !== props.id)
@@ -55,6 +57,15 @@ export default function Post(props: IPost) {
             <Button size="small" color="error" onClick={handleDelete}>
               Delete
             </Button>
+            {props.files !== null && (
+              <Link
+                component={RouterLink}
+                to={`${props.id}/audio`}
+                state={{ files: props.files }}
+              >
+                View Audio Files
+              </Link>
+            )}
           </Box>
         )}
       </CardActions>

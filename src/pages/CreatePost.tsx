@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
-import MediaRecorder from "../components/MediaRecorder";
+// import MediaRecorder from "../components/MediaRecorder";
 import AudioMenu from "../components/AudioMenu";
 
 export default function CreatePost() {
@@ -16,6 +16,7 @@ export default function CreatePost() {
     title: "",
     content: "",
     published: true,
+    audioFiles: {},
   });
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
@@ -34,7 +35,9 @@ export default function CreatePost() {
     setOpen(false);
   };
 
-  function handleChange(event) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     console.log(event);
     setPost((prevPost) => {
       return {
@@ -42,17 +45,34 @@ export default function CreatePost() {
         [event.target.name]: event.target.value,
       };
     });
+    console.log(post);
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+    const data = new FormData();
+    const published = post.published ? "true" : "false";
+    const appUrl = import.meta.env.VITE_APP_URL;
+    data.append("title", post.title);
+    data.append("content", post.content);
+    data.append("published", published);
+    if (Object.keys(post.audioFiles).length > 0) {
+      for (const value of Object.values(post.audioFiles)) {
+        data.append("audioFiles", value);
+      }
+    }
     console.log(post);
+    console.log({ ...post });
     await axios
-      .post("http://localhost:8000/api/posts/", { ...post })
+      .post(`${appUrl}/api/posts/`, data)
       .then(() => {
         setAlertMessage("Post created successfully");
-        setPost({ title: "", content: "", published: true });
+        setPost({
+          title: "",
+          content: "",
+          published: true,
+          audioFiles: {},
+        });
         setOpen(true);
       })
       .catch((e) => {
@@ -65,23 +85,16 @@ export default function CreatePost() {
   return (
     <Box>
       <Container>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <Box>
           <Typography component="h1" variant="h4" marginY={3}>
             Create Post
           </Typography>
-          <AudioMenu
-            elements={["title", "content"]}
-            title="Audio"
-            setAttribute={setAudioAttribute}
-          />
         </Box>
-        <form action="POST" onSubmit={handleSubmit}>
+        <form
+          action="POST"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <TextField
             id="title"
             name="title"
@@ -127,12 +140,6 @@ export default function CreatePost() {
             </Button>
           </Box>
         </form>
-        <MediaRecorder
-          attribute={audioAttribute}
-          setAttribute={setPost}
-          setAlertMessage={setAlertMessage}
-          setOpen={setOpen}
-        />
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert
             onClose={handleClose}

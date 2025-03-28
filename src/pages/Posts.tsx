@@ -8,10 +8,11 @@ import { IPost } from "../interfaces";
 
 export default function Posts() {
   const [posts, setPosts] = React.useState([]);
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:8000/api/posts/")
+      .get(`${appUrl}/api/posts/`)
       .then((res) => {
         console.log(res.data);
         setPosts(res.data);
@@ -27,6 +28,7 @@ export default function Posts() {
         owner_id={post.owner_id}
         id={post.id}
         setPosts={setPosts}
+        files={post.files}
       />
     );
   });

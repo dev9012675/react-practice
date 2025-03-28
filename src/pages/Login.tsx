@@ -40,10 +40,10 @@ export default function Login() {
     const form = new FormData();
     form.append("username", data.email);
     form.append("password", data.password);
-
+    const appUrl = import.meta.env.VITE_APP_URL;
     console.log(data);
     await axios
-      .post("http://localhost:8000/api/login", form)
+      .post(`${appUrl}/api/login`, form)
       .then((res) => {
         console.log(res.data);
         setUser(res.data);

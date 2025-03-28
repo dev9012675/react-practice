@@ -12,6 +12,7 @@ export default function Login() {
   const [user, setUser] = React.useState({ email: "", password: "" });
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -35,7 +36,7 @@ export default function Login() {
 
     console.log(user);
     await axios
-      .post("http://localhost:8000/api/users", { ...user })
+      .post(`${appUrl}/api/users`, { ...user })
       .then((res) => {
         setAlertMessage("Registered successfully");
         setUser({ email: "", password: "" });

@@ -3,5 +3,6 @@ export interface IPost {
   content: string;
   owner_id: number;
   id: number;
+  files: string;
   published?: boolean;
 }
