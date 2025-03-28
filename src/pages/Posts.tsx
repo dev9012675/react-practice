@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 import { IPost } from "../interfaces";
 
 export default function Posts() {
-  const [posts, setPosts] = React.useState([]);
+  const [posts, setPosts] = React.useState<IPost[]>([]);
   const appUrl = import.meta.env.VITE_APP_URL;
 
   React.useEffect(() => {

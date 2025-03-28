@@ -8,11 +8,12 @@ import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
+import { ICreatePost } from "../interfaces";
 // import MediaRecorder from "../components/MediaRecorder";
-import AudioMenu from "../components/AudioMenu";
+//import AudioMenu from "../components/AudioMenu";
 
 export default function CreatePost() {
-  const [post, setPost] = React.useState({
+  const [post, setPost] = React.useState<ICreatePost>({
     title: "",
     content: "",
     published: true,
@@ -20,12 +21,12 @@ export default function CreatePost() {
   });
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
-  const [audioAttribute, setAudioAttribute] = React.useState(
+  const [audioAttribute, _setAudioAttribute] = React.useState(
     Object.keys(post)[0]
   );
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
     if (reason === "clickaway") {

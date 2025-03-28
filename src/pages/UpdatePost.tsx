@@ -12,7 +12,12 @@ import { useParams } from "react-router";
 
 export default function UpdatePost() {
   const params = useParams();
-  const [post, setPost] = React.useState();
+  const [post, setPost] = React.useState({
+    title: "",
+    content: "",
+    published: true,
+  });
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
   const appUrl = import.meta.env.VITE_APP_URL;
@@ -26,6 +31,7 @@ export default function UpdatePost() {
           content: res.data.content,
           published: res.data.published,
         });
+        setLoading(false);
       });
     };
 
@@ -33,7 +39,7 @@ export default function UpdatePost() {
   }, []);
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
     if (reason === "clickaway") {
@@ -43,7 +49,9 @@ export default function UpdatePost() {
     setOpen(false);
   };
 
-  function handleChange(event) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     console.log(event);
     setPost((prevPost) => {
       return {
@@ -53,7 +61,7 @@ export default function UpdatePost() {
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     console.log(post);
@@ -69,7 +77,7 @@ export default function UpdatePost() {
       });
   }
 
-  if (!post) {
+  if (loading) {
     return (
       <Box>
         <Container>

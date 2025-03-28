@@ -4,18 +4,21 @@ import { Button } from "@mui/material";
 import { Typography } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import axios from "axios";
+import { IMediaRecorder, ICreatePost } from "../interfaces";
 
-export default function MediaRecorder(props) {
+export default function MediaRecorder(props: IMediaRecorder) {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
   const appUrl = import.meta.env.VITE_APP_URL;
 
   const handleSave = async () => {
-    const audioBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
+    const audioBlob = await axios
+      .get(mediaBlobUrl as string, { responseType: "blob" })
+      .then((res) => res.data);
     const audioFile = new File([audioBlob], `${props.attribute}.wav`, {
       type: "audio/wav",
     });
-    props.setAttribute((prevAttributes) => ({
+    props.setAttribute((prevAttributes: ICreatePost) => ({
       ...prevAttributes,
       audioFiles: {
         ...prevAttributes.audioFiles,
@@ -38,7 +41,7 @@ export default function MediaRecorder(props) {
       .post(`${appUrl}/api/audio/transcribe`, data)
       .then((res) => {
         console.log(res.data);
-        props.setAttribute((prevAttributes) => ({
+        props.setAttribute((prevAttributes: ICreatePost) => ({
           ...prevAttributes,
           [props.attribute]: res.data.transcription,
         }));

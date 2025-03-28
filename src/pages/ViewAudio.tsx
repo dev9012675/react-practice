@@ -5,12 +5,12 @@ import { Typography } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import { useLocation } from "react-router";
 import axios from "axios";
-import AudioMenu from "../components/AudioMenu";
+//import AudioMenu from "../components/AudioMenu";
 
 export default function ViewAudio() {
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState("");
-  const [file, setFile] = useState([]);
+  const [source, _setSource] = useState("");
+  const [_file, setFile] = useState([]);
   const location = useLocation();
   const { files } = location.state;
   const appUrl = import.meta.env.VITE_APP_URL;
@@ -21,7 +21,7 @@ export default function ViewAudio() {
         const res = await axios.post(`${appUrl}/api/audio/retrieveFilenames`, {
           path: files,
         });
-        const data = res.data.files.map((member) => ({
+        const data = res.data.files.map((member: string) => ({
           name: member.split(".")[0],
           path: `${files}/${member}`,
         }));
@@ -56,7 +56,6 @@ export default function ViewAudio() {
             <Typography component="h1" variant="h4" marginY={3}>
               Listen to Post Audio
             </Typography>
-            <AudioMenu elements={file} title="File" setAttribute={setSource} />
           </Box>
           <CardMedia
             component="audio"

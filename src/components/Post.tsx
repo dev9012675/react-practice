@@ -9,17 +9,11 @@ import { IPost } from "../interfaces";
 import { useAuth } from "../providers/authProvider";
 import { Link as RouterLink } from "react-router";
 import axios from "axios";
+import { IUser } from "../interfaces";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
-
-export default function Post(props: IPost) {
+export default function Post(
+  props: IPost & { setPosts: React.Dispatch<React.SetStateAction<IPost[]>> }
+) {
   const { user } = useAuth();
   const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -45,7 +39,7 @@ export default function Post(props: IPost) {
         <Button size="small" color="success">
           Learn More
         </Button>
-        {user.id === props.owner_id && (
+        {(user as IUser).id === props.owner_id && (
           <Box>
             <Button
               size="small"

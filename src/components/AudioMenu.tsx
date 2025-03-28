@@ -3,8 +3,9 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
+import { IFile, IMenu } from "../interfaces";
 
-export default function AudioMenu(props) {
+export default function AudioMenu(props: IMenu) {
   const appUrl = import.meta.env.VITE_APP_URL;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -30,13 +31,13 @@ export default function AudioMenu(props) {
     <MenuItem
       onClick={async () => {
         props.title === "Audio"
-          ? await props.setAttribute(element)
-          : await setAudioSource(element.path);
+          ? await props.setAttribute(element as string)
+          : await setAudioSource((element as IFile).path);
         handleClose();
       }}
       key={index}
     >
-      {props.title === "Audio" ? element : element.name}
+      {props.title === "Audio" ? (element as string) : (element as IFile).name}
     </MenuItem>
   ));
 

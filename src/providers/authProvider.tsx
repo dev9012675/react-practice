@@ -1,15 +1,30 @@
 import axios from "axios";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { IUser } from "../interfaces";
 
-const AuthContext = createContext();
+interface IAuthContext {
+  user: IUser | undefined;
+  setUser: (newUser?: IUser) => void;
+}
 
-const AuthProvider = ({ children }) => {
+const AuthContext = createContext<IAuthContext>({} as IAuthContext);
+
+const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Component content goes here
   const stringUser = localStorage.getItem("user");
 
-  const [user, setUser_] = useState(JSON.parse(stringUser));
+  const [user, setUser_] = useState<IUser | undefined>(
+    JSON.parse(stringUser as string)
+  );
 
-  const setUser = (newUser) => {
+  const setUser = (newUser?: IUser) => {
     setUser_(newUser);
   };
 

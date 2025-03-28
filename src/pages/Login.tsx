@@ -15,7 +15,7 @@ export default function Login() {
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
     if (reason === "clickaway") {
@@ -28,13 +28,15 @@ export default function Login() {
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  function handleChange(event) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     setData((prevData) => {
       return { ...prevData, [event.target.name]: event.target.value };
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = new FormData();

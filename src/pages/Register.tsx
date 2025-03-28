@@ -15,7 +15,7 @@ export default function Login() {
   const appUrl = import.meta.env.VITE_APP_URL;
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
     if (reason === "clickaway") {
@@ -25,19 +25,21 @@ export default function Login() {
     setOpen(false);
   };
 
-  function handleChange(event) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     setUser((prevUser) => {
       return { ...prevUser, [event.target.name]: event.target.value };
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     console.log(user);
     await axios
       .post(`${appUrl}/api/users`, { ...user })
-      .then((res) => {
+      .then(() => {
         setAlertMessage("Registered successfully");
         setUser({ email: "", password: "" });
         setOpen(true);
