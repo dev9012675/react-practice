@@ -33,6 +33,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + user.access_token;
       localStorage.setItem("user", JSON.stringify(user));
+      console.log("Authorization header set");
     } else {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("user");
