@@ -29,6 +29,28 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    const interceptor = axios.interceptors.request.use(
+      (config) => {
+        if (user && user.access_token) {
+          config.headers["Authorization"] = `Bearer ${user.access_token}`;
+        } else {
+          console.warn(
+            "Authorization token is not set. Request will be sent without token."
+          );
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(interceptor);
+    };
+  }, [user]);
+
+  useEffect(() => {
     if (user) {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + user.access_token;
