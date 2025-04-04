@@ -5,10 +5,13 @@ import { Container } from "@mui/material";
 import Post from "../components/Post";
 import { Typography } from "@mui/material";
 import { IPost } from "../interfaces";
+import { useAuth } from "../providers/authProvider";
 
 export default function Posts() {
   const [posts, setPosts] = React.useState<IPost[]>([]);
   const appUrl = import.meta.env.VITE_APP_URL;
+  const { user } = useAuth();
+  console.log(`User Test: ${JSON.stringify(user)}`);
 
   React.useEffect(() => {
     axios
@@ -18,7 +21,7 @@ export default function Posts() {
         setPosts(res.data);
       })
       .catch((e) => console.log(e));
-  }, []);
+  }, [appUrl]);
 
   const postElements = posts.map((post: IPost) => {
     return (
@@ -29,6 +32,7 @@ export default function Posts() {
         id={post.id}
         setPosts={setPosts}
         files={post.files}
+        key={post.id}
       />
     );
   });
