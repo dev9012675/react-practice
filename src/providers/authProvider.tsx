@@ -24,31 +24,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     JSON.parse(stringUser as string)
   );
 
+  const [loading, setLoading] = useState<boolean>(true);
+
   const setUser = (newUser?: IUser) => {
     setUser_(newUser);
   };
-
-  useEffect(() => {
-    const interceptor = axios.interceptors.request.use(
-      (config) => {
-        if (user && user.access_token) {
-          config.headers["Authorization"] = `Bearer ${user.access_token}`;
-        } else {
-          console.warn(
-            "Authorization token is not set. Request will be sent without token."
-          );
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      axios.interceptors.request.eject(interceptor);
-    };
-  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -56,6 +36,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         "Bearer " + user.access_token;
       localStorage.setItem("user", JSON.stringify(user));
       console.log("Authorization header set");
+      setLoading(false);
     } else {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("user");
@@ -71,7 +52,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>
+      {loading ? <div>Loading...</div> : children}
+    </AuthContext.Provider>
   );
 };
 
