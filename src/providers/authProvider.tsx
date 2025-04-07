@@ -12,6 +12,7 @@ import { IUser } from "../interfaces";
 interface IAuthContext {
   user: IUser | undefined;
   setUser: (newUser?: IUser) => void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -47,14 +48,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       user,
       setUser,
+      loading,
     }),
-    [user]
+    [user, loading]
   );
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {loading ? <div>Loading...</div> : children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 
