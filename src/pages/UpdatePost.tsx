@@ -9,6 +9,8 @@ import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
 import { useParams } from "react-router";
+import MediaRecorder from "../components/MediaRecorder";
+import AudioMenu from "../components/AudioMenu";
 
 export default function UpdatePost() {
   const params = useParams();
@@ -16,9 +18,13 @@ export default function UpdatePost() {
     title: "",
     content: "",
     published: true,
+    audioFiles: {},
   });
   const [loading, setLoading] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
+  const [audioAttribute, setAudioAttribute] = React.useState(
+    Object.keys(post)[0]
+  );
   const [alertMessage, setAlertMessage] = React.useState("");
   const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -30,6 +36,7 @@ export default function UpdatePost() {
           title: res.data.title,
           content: res.data.content,
           published: res.data.published,
+          audioFiles: {},
         });
         setLoading(false);
       });
@@ -63,10 +70,9 @@ export default function UpdatePost() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    console.log(post);
+    const { audioFiles, ...postData } = post;
     await axios
-      .put(`${appUrl}/api/posts/${params.id}`, { ...post })
+      .put(`${appUrl}/api/posts/${params.id}`, { ...postData })
       .then(() => {
         setAlertMessage("Post updated successfully");
         setOpen(true);
@@ -91,9 +97,16 @@ export default function UpdatePost() {
   return (
     <Box>
       <Container>
-        <Typography component="h1" variant="h4" marginY={3}>
-          Update Post
-        </Typography>
+        <Box>
+          <Typography component="h1" variant="h4" marginY={3}>
+            Update Post
+          </Typography>
+          <AudioMenu
+            elements={["title", "content"]}
+            title="Audio"
+            setAttribute={setAudioAttribute}
+          />
+        </Box>
         <form onSubmit={handleSubmit}>
           <TextField
             id="title"
@@ -140,6 +153,12 @@ export default function UpdatePost() {
             </Button>
           </Box>
         </form>
+        <MediaRecorder
+          attribute={audioAttribute}
+          setAttribute={setPost}
+          setAlertMessage={setAlertMessage}
+          setOpen={setOpen}
+        />
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert
             onClose={handleClose}
