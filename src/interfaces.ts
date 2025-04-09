@@ -21,15 +21,15 @@ export interface IFile {
 
 export interface IMenu {
   title: string;
-  setAttribute: React.Dispatch<React.SetStateAction<unknown>>;
+  setAttribute: React.Dispatch<React.SetStateAction<string>>;
   elements: string[] | IFile[];
 }
 
 export interface IMediaRecorder {
   attribute: string;
-  setAttribute: React.Dispatch<React.SetStateAction<unknown>>;
-  setAlertMessage: React.Dispatch<React.SetStateAction<unknown>>;
-  setOpen: React.Dispatch<React.SetStateAction<unknown>>;
+  setAttribute: React.Dispatch<React.SetStateAction<ICreatePost>>;
+  setAlertMessage: React.Dispatch<React.SetStateAction<string>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IUser {

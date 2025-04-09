@@ -9,8 +9,8 @@ import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
 import { ICreatePost } from "../interfaces";
-// import MediaRecorder from "../components/MediaRecorder";
-//import AudioMenu from "../components/AudioMenu";
+import MediaRecorder from "../components/MediaRecorder";
+import AudioMenu from "../components/AudioMenu";
 
 export default function CreatePost() {
   const [post, setPost] = React.useState<ICreatePost>({
@@ -21,7 +21,7 @@ export default function CreatePost() {
   });
   const [open, setOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
-  const [audioAttribute, _setAudioAttribute] = React.useState(
+  const [audioAttribute, setAudioAttribute] = React.useState(
     Object.keys(post)[0]
   );
 
@@ -90,6 +90,11 @@ export default function CreatePost() {
           <Typography component="h1" variant="h4" marginY={3}>
             Create Post
           </Typography>
+          <AudioMenu
+            elements={["title", "content"]}
+            title="Audio"
+            setAttribute={setAudioAttribute}
+          />
         </Box>
         <form
           action="POST"
@@ -141,6 +146,12 @@ export default function CreatePost() {
             </Button>
           </Box>
         </form>
+        <MediaRecorder
+          attribute={audioAttribute}
+          setAttribute={setPost}
+          setAlertMessage={setAlertMessage}
+          setOpen={setOpen}
+        />
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert
             onClose={handleClose}
