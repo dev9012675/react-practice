@@ -5,23 +5,26 @@ import { Container } from "@mui/material";
 import Post from "../components/Post";
 import { Typography } from "@mui/material";
 import { IPost } from "../interfaces";
-import { useAuth } from "../providers/authProvider";
+import { useWebSocket } from "../providers/useWebSocket";
 
 export default function Posts() {
   const [posts, setPosts] = React.useState<IPost[]>([]);
+
   const appUrl = import.meta.env.VITE_APP_URL;
-  const { user } = useAuth();
-  console.log(`User Test: ${JSON.stringify(user)}`);
+  const event = useWebSocket(`${appUrl}/api/posts/ws`);
+
+  console.log("Render");
 
   React.useEffect(() => {
     axios
       .get(`${appUrl}/api/posts/`)
       .then((res) => {
+        console.log("useEffect ran");
         console.log(res.data);
         setPosts(res.data);
       })
       .catch((e) => console.log(e));
-  }, [appUrl]);
+  }, [appUrl, event]);
 
   const postElements = posts.map((post: IPost) => {
     return (
