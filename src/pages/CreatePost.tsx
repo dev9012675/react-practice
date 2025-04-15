@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
-import axios from "axios";
+import { createPost } from "../api/postsApi";
 import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -11,6 +11,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { ICreatePost } from "../interfaces";
 import MediaRecorder from "../components/MediaRecorder";
 import AudioMenu from "../components/AudioMenu";
+import { useAuth } from "../providers/authProvider";
 
 export default function CreatePost() {
   const [post, setPost] = React.useState<ICreatePost>({
@@ -24,6 +25,7 @@ export default function CreatePost() {
   const [audioAttribute, setAudioAttribute] = React.useState(
     Object.keys(post)[0]
   );
+  const { setUser } = useAuth();
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
@@ -53,7 +55,6 @@ export default function CreatePost() {
     e.preventDefault();
     const data = new FormData();
     const published = post.published ? "true" : "false";
-    const appUrl = import.meta.env.VITE_APP_URL;
     data.append("title", post.title);
     data.append("content", post.content);
     data.append("published", published);
@@ -64,8 +65,7 @@ export default function CreatePost() {
     }
     console.log(post);
     console.log({ ...post });
-    await axios
-      .post(`${appUrl}/api/posts/`, data)
+    await createPost(data)
       .then(() => {
         setAlertMessage("Post created successfully");
         setPost({
@@ -77,8 +77,12 @@ export default function CreatePost() {
         setOpen(true);
       })
       .catch((e) => {
-        setAlertMessage(`Failed to create post:${e.message}`);
-        setOpen(true);
+        if (e.response.status === 401) {
+          setUser();
+        } else {
+          setAlertMessage(`Failed to create post:${e.message}`);
+          setOpen(true);
+        }
       });
   }
 

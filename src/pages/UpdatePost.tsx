@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
-import axios from "axios";
 import Typography from "@mui/material/Typography";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -11,6 +10,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { useParams } from "react-router";
 import MediaRecorder from "../components/MediaRecorder";
 import AudioMenu from "../components/AudioMenu";
+import { useAuth } from "../providers/authProvider";
+import { getSinglePost, updatePost } from "../api/postsApi";
 
 export default function UpdatePost() {
   const params = useParams();
@@ -20,26 +21,32 @@ export default function UpdatePost() {
     published: true,
     audioFiles: {},
   });
+  const { setUser } = useAuth();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [audioAttribute, setAudioAttribute] = React.useState(
     Object.keys(post)[0]
   );
   const [alertMessage, setAlertMessage] = React.useState("");
-  const appUrl = import.meta.env.VITE_APP_URL;
 
   React.useEffect(() => {
     const fetchPost = async () => {
-      await axios.get(`${appUrl}/api/posts/${params.id}`).then((res) => {
-        console.log(`Data:${res.data}`);
-        setPost({
-          title: res.data.title,
-          content: res.data.content,
-          published: res.data.published,
-          audioFiles: {},
+      await getSinglePost(params.id as string)
+        .then((res) => {
+          console.log(`Data:${res.data}`);
+          setPost({
+            title: res.data.title,
+            content: res.data.content,
+            published: res.data.published,
+            audioFiles: {},
+          });
+          setLoading(false);
+        })
+        .catch((e) => {
+          if (e.response.status === 401) {
+            setUser();
+          }
         });
-        setLoading(false);
-      });
     };
 
     fetchPost();
@@ -71,15 +78,18 @@ export default function UpdatePost() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { audioFiles, ...postData } = post;
-    await axios
-      .put(`${appUrl}/api/posts/${params.id}`, { ...postData })
+    await updatePost(params.id as string, postData)
       .then(() => {
         setAlertMessage("Post updated successfully");
         setOpen(true);
       })
       .catch((e) => {
-        setAlertMessage(`Failed to update post:${e.message}`);
-        setOpen(true);
+        if (e.response.status === 401) {
+          setUser();
+        } else {
+          setAlertMessage(`Failed to update post:${e.message}`);
+          setOpen(true);
+        }
       });
   }
 

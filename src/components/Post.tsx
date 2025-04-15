@@ -8,23 +8,26 @@ import Link from "@mui/material/Link";
 import { IPost } from "../interfaces";
 import { useAuth } from "../providers/authProvider";
 import { Link as RouterLink } from "react-router";
-import axios from "axios";
+import { deletePost } from "../api/postsApi";
 import { IUser } from "../interfaces";
 
 export default function Post(
   props: IPost & { setPosts: React.Dispatch<React.SetStateAction<IPost[]>> }
 ) {
-  const { user } = useAuth();
-  const appUrl = import.meta.env.VITE_APP_URL;
+  const { user, setUser } = useAuth();
 
   const handleDelete = async () => {
-    await axios
-      .delete(`${appUrl}/api/posts/${props.id}`)
+    await deletePost(props.id.toString())
       .then(() =>
         props.setPosts((prevPosts) =>
           prevPosts.filter((post) => post.id !== props.id)
         )
-      );
+      )
+      .catch((e) => {
+        if (e.response.status === 401) {
+          setUser();
+        }
+      });
   };
 
   return (

@@ -1,30 +1,36 @@
 import React from "react";
-import axios from "axios";
 import { Box } from "@mui/material";
 import { Container } from "@mui/material";
 import Post from "../components/Post";
 import { Typography } from "@mui/material";
 import { IPost } from "../interfaces";
 import { useWebSocket } from "../providers/useWebSocket";
+import { getPosts } from "../api/postsApi";
+import { useAuth } from "../providers/authProvider";
 
 export default function Posts() {
   const [posts, setPosts] = React.useState<IPost[]>([]);
-
   const appUrl = import.meta.env.VITE_APP_URL;
+  const { setUser } = useAuth();
+
   const event = useWebSocket(`${appUrl}/api/posts/ws`);
 
   console.log("Render");
 
   React.useEffect(() => {
-    axios
-      .get(`${appUrl}/api/posts/`)
+    getPosts()
       .then((res) => {
         console.log("useEffect ran");
         console.log(res.data);
         setPosts(res.data);
       })
-      .catch((e) => console.log(e));
-  }, [appUrl, event]);
+      .catch((e) => {
+        console.log(e);
+        if (e.response.status === 401) {
+          setUser();
+        }
+      });
+  }, [event]);
 
   const postElements = posts.map((post: IPost) => {
     return (
