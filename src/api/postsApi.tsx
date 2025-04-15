@@ -26,5 +26,5 @@ export async function updatePost(
 }
 
 export async function deletePost(id: string) {
-  axios.delete(`${appUrl}/api/posts/${id}`);
+  return await axios.delete(`${appUrl}/api/posts/${id}`);
 }
