@@ -48,7 +48,15 @@ export default function Posts() {
 
   return (
     <Box>
-      <Container sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          backgroundColor: "white",
+          borderRadius: "15px",
+        }}
+      >
         <Typography component="h1" variant="h4" marginY={3}>
           Posts
         </Typography>

@@ -1,5 +1,19 @@
+html {
+  margin: 0;
+  height: 100%;
+}
+
 body {
   margin: 0;
+  min-height: 100%;
+  background-image: url("../background/background.jpg");
+  background-repeat: repeat-y;
+  background-position: center;
+  background-size: cover;
+}
+
+#root {
+  height: 100%;
 }
 
 .slider > img {

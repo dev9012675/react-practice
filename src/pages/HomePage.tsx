@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
 import { Container } from "@mui/material";
-import Button from "@mui/material/Button";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 export default function HomePage() {
   return (
-    <Box>
+    <Box sx={{ backgroundColor: "white", pt: "20px", pb: "30px" }}>
       <Container sx={{ mt: 3 }}>
         <Carousel
           additionalTransfrom={0}
@@ -71,10 +70,6 @@ export default function HomePage() {
             <img src="slider\3.jpg" alt="" />
           </div>
         </Carousel>
-        ;
-        <Button variant="contained" sx={{ mt: 3 }} href="/posts/create">
-          Create Post
-        </Button>
       </Container>
     </Box>
   );

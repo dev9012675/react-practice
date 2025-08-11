@@ -89,7 +89,14 @@ export default function CreatePost() {
   console.log(audioAttribute);
   return (
     <Box>
-      <Container>
+      <Container
+        sx={{
+          backgroundColor: "white",
+          borderRadius: "15px",
+          padding: "5px",
+          width: "80%",
+        }}
+      >
         <Box>
           <Typography component="h1" variant="h4" marginY={3}>
             Create Post

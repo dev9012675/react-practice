@@ -58,7 +58,15 @@ export default function Login() {
   }
   return (
     <Box>
-      <Container>
+      <Container
+        sx={{
+          backgroundColor: "white",
+          borderRadius: "15px",
+          padding: "5px",
+          paddingBottom: "25px",
+          width: "80%",
+        }}
+      >
         <Typography component="h1" variant="h4" marginY={3}>
           Login
         </Typography>

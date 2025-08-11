@@ -103,6 +103,10 @@ export default function NavBar(props: { window?: () => Window }) {
       {
         link: "View Posts",
         url: "/posts",
+      },
+      {
+        link: "Create Post",
+        url: "/posts/create",
       }
     );
   } else {
@@ -153,7 +157,10 @@ export default function NavBar(props: { window?: () => Window }) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar
+        component="nav"
+        style={{ background: "transparent", boxShadow: "none" }}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
