@@ -83,7 +83,7 @@ export function NavBar2() {
 
 const drawerWidth = 240;
 
-export default function NavBar(props) {
+export default function NavBar(props: { window?: () => Window }) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user, setUser } = useAuth();
