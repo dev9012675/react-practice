@@ -62,13 +62,13 @@ export default function HomePage() {
           swipeable
         >
           <div className="slider">
-            <img src="public\slider\1.jpg" alt="" />
+            <img src="slider\1.jpg" alt="" />
           </div>
           <div className="slider">
-            <img src="public\slider\2.jpg" alt="" />
+            <img src="slider\2.jpg" alt="" />
           </div>
           <div className="slider">
-            <img src="public\slider\3.jpg" alt="" />
+            <img src="slider\3.jpg" alt="" />
           </div>
         </Carousel>
         ;
